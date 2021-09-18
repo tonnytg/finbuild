@@ -1,0 +1,11 @@
+# IDE
+.idea
+
+# GO
+go.sum
+
+# Logs
+*.log
+
+# Env
+*.env
