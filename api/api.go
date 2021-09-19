@@ -21,13 +21,13 @@ func StartAPI() {
 func GetRoot(w http.ResponseWriter, r *http.Request) {
 
 	type InfoAccounts struct {
-		ID      int
-		Finance []map[string]interface{}
+		ID      int                      `json:"id"`
+		Finance []map[string]interface{} `json:"finance"`
 	}
 
 	type Info struct {
-		Message  string
-		InfoUser InfoAccounts
+		Message  string       `json:"message"`
+		InfoUser InfoAccounts `json:"infoUser"`
 	}
 
 	var result []map[string]interface{}
