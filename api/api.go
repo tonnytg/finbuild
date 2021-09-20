@@ -2,12 +2,60 @@ package api
 
 import (
 	"encoding/json"
+	"finbuild/entity/finance"
+	"finbuild/entity/user"
 	"fmt"
+	"github.com/gorilla/mux"
 	"log"
 	"net/http"
-
-	"github.com/gorilla/mux"
 )
+
+type Response struct {
+	Status  string                   `json:"status"` // success, fail, error
+	Data    []map[string]interface{} `json:"data"`
+	Message string                   `json:"message"`
+}
+
+type InfoAccounts struct {
+	ID      int                      `json:"id"`
+	Finance []map[string]interface{} `json:"finance"`
+}
+
+type Info struct {
+	InfoUser InfoAccounts `json:"infoUser"`
+}
+
+func GetRoot(w http.ResponseWriter, r *http.Request) {
+
+	var msg []map[string]interface{}
+
+	f := finance.Account{Balance: 1000.01}
+	u := user.User{ID: "1", FistName: "Tonnytg"}
+
+	mp1 := map[string]interface{}{
+		"user": u,
+	}
+	msg = append(msg, mp1)
+
+	mp2 := map[string]interface{}{
+		"finance": f,
+	}
+	msg = append(msg, mp2)
+
+	jSend := Response{
+		Status:  "success",
+		Data:    msg,
+		Message: "test",
+	}
+
+	b, err := json.Marshal(jSend)
+	if err != nil {
+		fmt.Println("error:", err)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(b)
+}
 
 // StartAPI Listen API with mux package
 func StartAPI() {
@@ -16,43 +64,4 @@ func StartAPI() {
 	router.HandleFunc("/user", getUser).Methods("GET")
 	fmt.Println("FinBuild API is working on port :8888")
 	log.Fatal(http.ListenAndServe(":8888", router))
-}
-
-func GetRoot(w http.ResponseWriter, r *http.Request) {
-
-	type InfoAccounts struct {
-		ID      int                      `json:"id"`
-		Finance []map[string]interface{} `json:"finance"`
-	}
-
-	type Info struct {
-		Message  string       `json:"message"`
-		InfoUser InfoAccounts `json:"infoUser"`
-	}
-
-	var result []map[string]interface{}
-
-	mp1 := map[string]interface{}{
-		"Assets": "1.000,00",
-		"ETF":    "2.000,00",
-	}
-
-	result = append(result, mp1)
-
-	// struct
-	info := Info{
-		Message: "success",
-		InfoUser: InfoAccounts{
-			ID:      1,
-			Finance: result,
-		},
-	}
-
-	b, err := json.Marshal(info)
-	if err != nil {
-		fmt.Println("error:", err)
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(b)
 }

@@ -28,12 +28,17 @@ func getUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	mp1 := map[string]interface{}{
-		"message": "success",
 		"user":    u,
 	}
 	msg = append(msg, mp1)
 
-	b, err := json.Marshal(msg)
+	jSend := Response{
+		Status:  "success",
+		Data:    msg,
+		Message: "test",
+	}
+
+	b, err := json.Marshal(jSend)
 	if err != nil {
 		fmt.Println("error:", err)
 	}
