@@ -5,8 +5,8 @@ type Asset struct {
 	ID       string  `json:"id"`
 	Price    float64 `json:"price"`
 	Quantity float64 `json:"quantity"`
-	Date     string  `json:"date"`
 	Action   string  `json:"action"` // BUY or SELL
+	Date     string  `json:"date"`
 }
 
 // AssetRent it's all transaction/action gain or lost money
