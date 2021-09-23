@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"finbuild/database"
 	"finbuild/entity/finance"
 	"fmt"
 	"io/ioutil"
@@ -24,6 +25,9 @@ func postExchange(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println("ERROR: problem to unmarshal body", err)
 	}
+
+	// test
+	database.DB.Table("exchanges").Create(&f)
 
 	// create a slice of interface to receive json content
 	mp1 := map[string]interface{}{
