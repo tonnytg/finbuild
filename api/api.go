@@ -30,7 +30,7 @@ func GetRoot(w http.ResponseWriter, r *http.Request) {
 	var msg []map[string]interface{}
 
 	f := finance.Account{Balance: 1000.01}
-	u := user.User{ID: "1", FistName: "Tonnytg"}
+	u := user.User{ID: "1", FirstName: "Tonnytg"}
 
 	mp1 := map[string]interface{}{
 		"user": u,
@@ -60,8 +60,11 @@ func GetRoot(w http.ResponseWriter, r *http.Request) {
 // StartAPI Listen API with mux package
 func StartAPI() {
 	router := mux.NewRouter()
+
 	router.HandleFunc("/", GetRoot).Methods("GET")
 	router.HandleFunc("/user", getUser).Methods("GET")
+	router.HandleFunc("/exchange", postExchange).Methods("POST")
+
 	fmt.Println("FinBuild API is working on port :8888")
 	log.Fatal(http.ListenAndServe(":8888", router))
 }
