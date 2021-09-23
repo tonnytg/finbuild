@@ -12,27 +12,20 @@ import (
 // getUser return api response with user info
 func getUser(w http.ResponseWriter, r *http.Request) {
 
-	var msg []map[string]interface{}
+	// read database return and parse to struct
+	dbuser := &user.User{}
+	database.DB.First(&dbuser, "1").Scan(&dbuser)
 
-	u := user.User{
-		ID:         "1",
-		FirstName:  "Tonnytg",
-		LastName:   "TG",
-		SocialID:   "001.001.001-01",
-		Age:        50,
-		Email:      "tonnytg@domain.com",
-		ValidEmail: true,
-		Phone:      "+5522999999999",
-		Sex:        "male",
-		Sign:       "Aquarius",
-		Address:    "São Paulo, Brazil",
-	}
-
+	// create a slice of interface to receive json content
 	mp1 := map[string]interface{}{
-		"user": u,
+		"exchange": dbuser,
 	}
+
+	// create a map for json template return
+	var msg []map[string]interface{}
 	msg = append(msg, mp1)
 
+	// json template to return
 	jSend := Response{
 		Status:  "success",
 		Data:    msg,
@@ -45,15 +38,5 @@ func getUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	w.Write(b)
-}
-
-func getUserDB(w http.ResponseWriter, r *http.Request) {
-
-	//id := 1
-	dbuser := &user.User{}
-	database.DB.First(&dbuser, "1").Scan(&dbuser)
-	fmt.Println(dbuser)
-	b, _ := json.Marshal(dbuser)
 	w.Write(b)
 }
