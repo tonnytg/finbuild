@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"finbuild/database"
 	"fmt"
 	"net/http"
 
@@ -15,7 +16,7 @@ func getUser(w http.ResponseWriter, r *http.Request) {
 
 	u := user.User{
 		ID:         "1",
-		FistName:   "Tonnytg",
+		FirstName:  "Tonnytg",
 		LastName:   "TG",
 		SocialID:   "001.001.001-01",
 		Age:        50,
@@ -28,7 +29,7 @@ func getUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	mp1 := map[string]interface{}{
-		"user":    u,
+		"user": u,
 	}
 	msg = append(msg, mp1)
 
@@ -44,5 +45,15 @@ func getUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
+	w.Write(b)
+}
+
+func getUserDB(w http.ResponseWriter, r *http.Request) {
+
+	//id := 1
+	dbuser := &user.User{}
+	database.DB.First(&dbuser, "1").Scan(&dbuser)
+	fmt.Println(dbuser)
+	b, _ := json.Marshal(dbuser)
 	w.Write(b)
 }
