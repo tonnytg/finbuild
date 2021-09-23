@@ -2,7 +2,7 @@ package user
 
 type User struct {
 	ID         string `json:"id"`
-	FistName   string `json:"fist_name"`
+	FirstName  string `json:"first_name" db:"first_name"`
 	LastName   string `json:"last_name"`
 	SocialID   string `json:"social_id"` // CPF
 	Phone      string `json:"phone"`
