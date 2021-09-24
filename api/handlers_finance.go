@@ -26,8 +26,12 @@ func postExchange(w http.ResponseWriter, r *http.Request) {
 		log.Println("ERROR: problem to unmarshal body", err)
 	}
 
-	// test
+	// save database
 	database.DB.Table("exchanges").Create(&f)
+
+	// update Balance
+	a := finance.Account{}
+	a.UpdateBalance(f.UserID, f.Price)
 
 	// create a slice of interface to receive json content
 	mp1 := map[string]interface{}{
@@ -51,5 +55,8 @@ func postExchange(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	w.Write(b)
+	_, err = w.Write(b)
+	if err != nil {
+		return
+	}
 }
