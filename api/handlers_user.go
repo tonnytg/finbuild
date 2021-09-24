@@ -13,8 +13,11 @@ import (
 func getUser(w http.ResponseWriter, r *http.Request) {
 
 	// read database return and parse to struct
+	q := r.URL.Query()
+	id := q["id"]
+
 	dbuser := &user.User{}
-	database.DB.First(&dbuser, "1").Scan(&dbuser)
+	database.DB.First(&dbuser, id).Scan(&dbuser)
 
 	// create a slice of interface to receive json content
 	mp1 := map[string]interface{}{
