@@ -2,8 +2,7 @@ package api
 
 import (
 	"encoding/json"
-	"finbuild/entity/finance"
-	"finbuild/entity/user"
+	"finbuild/database"
 	"fmt"
 	"github.com/gorilla/mux"
 	"log"
@@ -27,10 +26,26 @@ type Info struct {
 
 func GetRoot(w http.ResponseWriter, r *http.Request) {
 
+	// get balance
+	type Account struct {
+		Balance float64
+	}
+	var account Account
+	// read database return and parse to struct
+	q := r.URL.Query()
+	id := q["id"]
+	database.DB.Table("accounts").First(&account, "user_id = ?", id).Scan(&account).Find(&Account{})
+
 	var msg []map[string]interface{}
 
-	f := finance.Account{Balance: 1000.01}
-	u := user.User{ID: "1", FirstName: "Tonnytg"}
+	f := Account{Balance: account.Balance}
+
+	type Users struct {
+		ID string `json:"id"`
+		FirstName string `json:"first_name"`
+	}
+	u := Users{}
+	database.DB.Table("users").First(&u, "id = ?", id).Scan(&u).Find(&Users{})
 
 	mp1 := map[string]interface{}{
 		"user": u,
