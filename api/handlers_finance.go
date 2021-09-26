@@ -32,7 +32,7 @@ func postExchange(w http.ResponseWriter, r *http.Request) {
 	// update Balance
 	a := finance.Account{}
 	a.UpdateBalance(f.UserID, f.Action, f.Quantity, f.Price)
-	a.RegisterAsset(f.UserID, f.Action, f.Quantity, f.Price)
+	a.RegisterAsset(f.UserID, f.Action, f.ID, f.Quantity, f.Price, f.Date)
 
 	// create a slice of interface to receive json content
 	mp1 := map[string]interface{}{

@@ -60,7 +60,16 @@ func (a *Account) UpdateBalance(userid uuid.UUID, action string, quantity float6
 	return 0, errors.New("wrong action")
 }
 
-func (a *Account) RegisterAsset(userid uuid.UUID, action string, quantity float64,price float64) error {
+func (a *Account) RegisterAsset(userid uuid.UUID, action string, code string, quantity float64,price float64, date string) error {
 	log.Printf("INFO: save in database - user: %s action: %s quantity: %f price: %f", userid, action, quantity, price)
+	as := &Asset{
+		userid,
+		code,
+		price,
+		quantity,
+		action,
+		date,
+	}
+	database.DB.Model(&Asset{}).Create(&as)
 	return nil
 }
