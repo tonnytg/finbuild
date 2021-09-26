@@ -3,8 +3,8 @@ package finance
 import (
 	"errors"
 	"finbuild/database"
-	"fmt"
 	"github.com/google/uuid"
+	"log"
 )
 
 type AssetInterface interface {
@@ -45,14 +45,12 @@ func (a *Account) UpdateBalance(userid uuid.UUID, action string, quantity float6
 	database.DB.Table("accounts").First(&account).Scan(&account)
 
 	if action == "BUY" {
-		fmt.Println("b")
 		// update balance
 		v := account.Balance + ( price * quantity )
 		database.DB.Model(&Account{}).Where("user_id = ?", userid).Update("balance", v)
 		return v, nil
 	}
 	if action == "SELL" {
-		fmt.Println("s")
 		// update balance
 		v := account.Balance - ( price * quantity )
 		database.DB.Model(&Account{}).Where("user_id = ?", userid).Update("balance", v)
@@ -63,6 +61,6 @@ func (a *Account) UpdateBalance(userid uuid.UUID, action string, quantity float6
 }
 
 func (a *Account) RegisterAsset(userid uuid.UUID, action string, quantity float64,price float64) error {
-	fmt.Println(userid, "save ", action, quantity, price)
+	log.Printf("DEBUG: save in database - user: %s action: %s quantity: %f price: %f", userid, action, quantity, price)
 	return nil
 }

@@ -39,13 +39,6 @@ func postExchange(w http.ResponseWriter, r *http.Request) {
 		"exchange": f,
 	}
 
-	if f.Action == "BUY" {
-		fmt.Printf("user buy many %f of %s\n", f.Quantity, f.ID )
-	}
-	if f.Action == "SELL" {
-		fmt.Printf("user sell many %f of %s\n", f.Quantity, f.ID )
-	}
-
 	// create a map for json template return
 	var msg []map[string]interface{}
 	msg = append(msg, mp1)
