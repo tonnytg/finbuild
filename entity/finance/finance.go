@@ -61,6 +61,6 @@ func (a *Account) UpdateBalance(userid uuid.UUID, action string, quantity float6
 }
 
 func (a *Account) RegisterAsset(userid uuid.UUID, action string, quantity float64,price float64) error {
-	log.Printf("DEBUG: save in database - user: %s action: %s quantity: %f price: %f", userid, action, quantity, price)
+	log.Printf("INFO: save in database - user: %s action: %s quantity: %f price: %f", userid, action, quantity, price)
 	return nil
 }
