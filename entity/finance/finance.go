@@ -1,12 +1,15 @@
 package finance
 
 import (
+	"errors"
 	"finbuild/database"
+	"fmt"
 	"github.com/google/uuid"
 )
 
 type AssetInterface interface {
-	UpdateBalance() (float64, error)
+	UpdateBalance(userid uuid.UUID, action string, quantity float64,price float64) (float64, error)
+	RegisterAsset(userid uuid.UUID, action string, quantity float64,price float64) error
 }
 
 // Asset it's a term for all kind of item in Finance Market
@@ -35,15 +38,31 @@ type Account struct {
 	Balance float64   `json:"balance"`
 }
 
-func (a *Account) UpdateBalance(userid uuid.UUID, price float64) (float64, error){
+func (a *Account) UpdateBalance(userid uuid.UUID, action string, quantity float64,price float64) (float64, error){
 
 	// get balance
 	var account Account
 	database.DB.Table("accounts").First(&account).Scan(&account)
 
-	// update balance
-	v := account.Balance + price
-	database.DB.Model(&Account{}).Where("user_id = ?", userid).Update("balance", v)
+	if action == "BUY" {
+		fmt.Println("b")
+		// update balance
+		v := account.Balance + ( price * quantity )
+		database.DB.Model(&Account{}).Where("user_id = ?", userid).Update("balance", v)
+		return v, nil
+	}
+	if action == "SELL" {
+		fmt.Println("s")
+		// update balance
+		v := account.Balance - ( price * quantity )
+		database.DB.Model(&Account{}).Where("user_id = ?", userid).Update("balance", v)
+		return v, nil
+	}
 
-	return v, nil
+	return 0, errors.New("wrong action")
+}
+
+func (a *Account) RegisterAsset(userid uuid.UUID, action string, quantity float64,price float64) error {
+	fmt.Println(userid, "save ", action, quantity, price)
+	return nil
 }

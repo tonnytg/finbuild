@@ -31,11 +31,19 @@ func postExchange(w http.ResponseWriter, r *http.Request) {
 
 	// update Balance
 	a := finance.Account{}
-	a.UpdateBalance(f.UserID, f.Price)
+	a.UpdateBalance(f.UserID, f.Action, f.Quantity, f.Price)
+	a.RegisterAsset(f.UserID, f.Action, f.Quantity, f.Price)
 
 	// create a slice of interface to receive json content
 	mp1 := map[string]interface{}{
 		"exchange": f,
+	}
+
+	if f.Action == "BUY" {
+		fmt.Printf("user buy many %f of %s\n", f.Quantity, f.ID )
+	}
+	if f.Action == "SELL" {
+		fmt.Printf("user sell many %f of %s\n", f.Quantity, f.ID )
 	}
 
 	// create a map for json template return
