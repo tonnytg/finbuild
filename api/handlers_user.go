@@ -9,6 +9,34 @@ import (
 	"finbuild/entity/user"
 )
 
+func registerUser(w http.ResponseWriter, r *http.Request) {
+
+	decoder := json.NewDecoder(r.Body)
+	var u user.User
+	err := decoder.Decode(&u)
+
+	mp1 := map[string]interface{}{
+		"exchange": u,
+	}
+
+	var msg []map[string]interface{}
+	msg = append(msg, mp1)
+
+	jSend := Response{
+		Status:  "success",
+		Data:    msg,
+		Message: "test",
+	}
+
+	b, err := json.Marshal(jSend)
+	if err != nil {
+		fmt.Println("error:", err)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(b)
+}
+
 // getUser return api response with user info
 func getUser(w http.ResponseWriter, r *http.Request) {
 

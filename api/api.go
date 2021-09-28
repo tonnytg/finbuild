@@ -78,6 +78,7 @@ func StartAPI() {
 
 	router.HandleFunc("/", GetRoot).Methods("GET")
 	router.HandleFunc("/user", getUser).Methods("GET")
+	router.HandleFunc("/user", registerUser).Methods("POST")
 	router.HandleFunc("/exchange", postExchange).Methods("POST")
 
 	fmt.Println("FinBuild API is working on port :8888")
