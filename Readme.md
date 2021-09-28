@@ -8,6 +8,27 @@ Build your Finance Life
 ### How to use
 
 To request a user balance <br/>
+Method: `POST` <br/>
+`http://localhost:8888/user`
+```
+{
+    "id": "00000000-0000-0000-0000-000000000000",
+    "first_name": "Tonnytg",
+    "last_name": "TG",
+    "social_id": "001.001.001.01",
+    "phone": "11946302400",
+    "email": "tonnytg@gmail.com",
+    "valid_email": true,
+    "address": "Brazil",
+    "age": 30,
+    "sex": "male",
+    "sign": "Aquarius"
+}
+```
+
+<br />
+
+To request a user balance <br/>
 Method: `GET` <br/>
 `http://localhost:8888?id=00000000-0000-0000-0000-000000000000`
 
