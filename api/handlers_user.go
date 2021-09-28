@@ -15,6 +15,8 @@ func registerUser(w http.ResponseWriter, r *http.Request) {
 	var u user.User
 	err := decoder.Decode(&u)
 
+	database.DB.Model(&user.User{}).Create(&u)
+
 	mp1 := map[string]interface{}{
 		"exchange": u,
 	}
