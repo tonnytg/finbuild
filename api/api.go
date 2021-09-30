@@ -3,9 +3,9 @@ package api
 import (
 	"encoding/json"
 	"finbuild/database"
+	log "finbuild/pkg/logging"
 	"fmt"
 	"github.com/gorilla/mux"
-	"log"
 	"net/http"
 )
 
@@ -66,6 +66,7 @@ func GetRoot(w http.ResponseWriter, r *http.Request) {
 	b, err := json.Marshal(jSend)
 	if err != nil {
 		fmt.Println("error:", err)
+
 	}
 
 	w.Header().Set("Content-Type", "application/json")
@@ -82,5 +83,7 @@ func StartAPI() {
 	router.HandleFunc("/exchange", postExchange).Methods("POST")
 
 	fmt.Println("FinBuild API is working on port :8888")
-	log.Fatal(http.ListenAndServe(":8888", router))
+	err := http.ListenAndServe(":8888", router)
+	msg := fmt.Sprintf("error http server: %v", err)
+	log.Msg("CRITICAL", msg)
 }

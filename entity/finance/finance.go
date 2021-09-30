@@ -3,8 +3,9 @@ package finance
 import (
 	"errors"
 	"finbuild/database"
+	log "finbuild/pkg/logging"
+	"fmt"
 	"github.com/google/uuid"
-	"log"
 )
 
 type AssetInterface interface {
@@ -61,7 +62,8 @@ func (a *Account) UpdateBalance(userid uuid.UUID, action string, quantity float6
 }
 
 func (a *Account) RegisterAsset(userid uuid.UUID, action string, code string, quantity float64,price float64, date string) error {
-	log.Printf("INFO: save in database - user: %s action: %s quantity: %f price: %f", userid, action, quantity, price)
+	msg := fmt.Sprintf("save in database - user: %s action: %s quantity: %f price: %f", userid, action, quantity, price)
+	log.Msg("INFO", msg)
 	as := &Asset{
 		userid,
 		code,
