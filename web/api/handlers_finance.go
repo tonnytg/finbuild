@@ -62,3 +62,37 @@ func postExchange(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+
+func getWallet(w http.ResponseWriter, r *http.Request) {
+
+	// read db return and parse to struct
+	q := r.URL.Query()
+	walletID := q["id"]
+
+	// create a slice of interface to receive json content
+	mp1 := map[string]interface{}{
+		"wallets": walletID,
+	}
+
+	// create a map for json template return
+	var msg []map[string]interface{}
+	msg = append(msg, mp1)
+
+	// json template to return
+	jSend := Response{
+		Status:  "success",
+		Data:    msg,
+		Message: "test",
+	}
+
+	b, err := json.Marshal(jSend)
+	if err != nil {
+		fmt.Println("error:", err)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	_, err = w.Write(b)
+	if err != nil {
+		return
+	}
+}
