@@ -1,4 +1,4 @@
-package finance
+package entity
 
 import (
 	"errors"
@@ -7,11 +7,6 @@ import (
 	"fmt"
 	"github.com/google/uuid"
 )
-
-type AssetInterface interface {
-	UpdateBalance(userid uuid.UUID, action string, quantity float64,price float64) (float64, error)
-	RegisterAsset(userid uuid.UUID, action string, quantity float64,price float64) error
-}
 
 // Asset it's a term for all kind of item in Finance Market
 type Asset struct {
@@ -33,35 +28,34 @@ type AssetRent struct {
 	Percent float64   `json:"percent"`
 }
 
-// Account contains the sum of all assets
-type Account struct {
-	UserID  uuid.UUID `json:"user_id"`
-	Balance float64   `json:"balance"`
+type AssetInterface interface {
+	UpdateBalance(userid uuid.UUID, action string, quantity float64,price float64) (float64, error)
+	RegisterAsset(userid uuid.UUID, action string, quantity float64,price float64) error
 }
 
-func (a *Account) UpdateBalance(userid uuid.UUID, action string, quantity float64,price float64) (float64, error){
+func (a *Wallet) UpdateBalance(userid uuid.UUID, action string, quantity float64,price float64) (float64, error){
 
 	// get balance
-	var account Account
+	var account Wallet
 	database.DB.Table("accounts").First(&account).Scan(&account)
 
 	if action == "BUY" {
 		// update balance
 		v := account.Balance + ( price * quantity )
-		database.DB.Model(&Account{}).Where("user_id = ?", userid).Update("balance", v)
+		database.DB.Model(&Wallet{}).Where("user_id = ?", userid).Update("balance", v)
 		return v, nil
 	}
 	if action == "SELL" {
 		// update balance
 		v := account.Balance - ( price * quantity )
-		database.DB.Model(&Account{}).Where("user_id = ?", userid).Update("balance", v)
+		database.DB.Model(&Wallet{}).Where("user_id = ?", userid).Update("balance", v)
 		return v, nil
 	}
 
 	return 0, errors.New("wrong action")
 }
 
-func (a *Account) RegisterAsset(userid uuid.UUID, action string, code string, quantity float64,price float64, date string) error {
+func (a *Wallet) RegisterAsset(userid uuid.UUID, action string, code string, quantity float64,price float64, date string) error {
 	msg := fmt.Sprintf("save in database - user: %s action: %s quantity: %f price: %f", userid, action, quantity, price)
 	log.Msg("INFO", msg)
 	as := &Asset{
