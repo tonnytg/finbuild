@@ -23,14 +23,25 @@ func registerUser(w http.ResponseWriter, r *http.Request) {
 	u.UserID = genID
 	db.DB.Model(&user.User{}).Create(&u)
 
+	// create a blank wallet to new User
 	var wallet entity.Wallet
 	wallet.WalletID = uuid.New()
 	wallet.UserID = u.UserID
 	wallet.Balance = 0
 	db.DB.Table("wallets").Model(&entity.Wallet{}).Create(&wallet)
 
+	type RegistryReturn struct {
+		WalletID uuid.UUID
+		UserID uuid.UUID
+	}
+
+	rr :=  RegistryReturn{
+		wallet.WalletID,
+		u.UserID,
+	}
+
 	mp1 := map[string]interface{}{
-		"exchange": u,
+		"registry": rr,
 	}
 
 	var msg []map[string]interface{}
@@ -39,7 +50,7 @@ func registerUser(w http.ResponseWriter, r *http.Request) {
 	jSend := Response{
 		Status:  "success",
 		Data:    msg,
-		Message: "test",
+		Message: "registry with success",
 	}
 
 	b, err := json.Marshal(jSend)
@@ -93,6 +104,7 @@ func GetRoot(w http.ResponseWriter, r *http.Request) {
 		WalletID string
 		Balance float64
 	}
+
 	var account Account
 	// read db return and parse to struct
 	q := r.URL.Query()
