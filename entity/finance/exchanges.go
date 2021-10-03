@@ -1,15 +1,12 @@
 package entity
 
-import (
-	"github.com/google/uuid"
-)
-
-// Asset it's a term for all kind of item in Finance Market
+// Exchanges it's a term for all kind of item in Finance Market
 // contains registry about transaction purchase or sellers orders
 type Exchanges struct {
-	UserID   uuid.UUID `json:"user_id"`
-	ID       string    `json:"id"`
+	WalletID string    `json:"wallet_id"`
+	AssetID  string    `json:"asset_id"`
 	Price    float64   `json:"price"`
+	Tax      float64   `json:"tax"`
 	Quantity float64   `json:"quantity"`
 	Action   string    `json:"action"` // BUY or SELL
 	Date     string    `json:"date"`
