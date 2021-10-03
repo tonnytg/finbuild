@@ -1,6 +1,7 @@
 package api
 
 import (
+	"encoding/json"
 	log "finbuild/pkg/logging"
 	"fmt"
 	"github.com/gorilla/mux"
@@ -12,6 +13,33 @@ type Response struct {
 	Status  string                   `json:"status"` // success, fail, error
 	Data    []map[string]interface{} `json:"data"`
 	Message string                   `json:"message"`
+}
+
+// JParse Parse text to json
+func JParse(w http.ResponseWriter, j ...map[string]interface{}) {
+
+	// create a map for json template return
+	var msg []map[string]interface{}
+	for x, _ :=  range j {
+		msg = append(msg, j[x])
+	}
+
+	jSend := Response{
+		Status:  "success",
+		Data:    msg,
+		Message: "test",
+	}
+
+	b, err := json.Marshal(jSend)
+	if err != nil {
+		fmt.Println("error:", err)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	_, err = w.Write(b)
+	if err != nil {
+		return
+	}
 }
 
 // StartAPI Listen API with mux package

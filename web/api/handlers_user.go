@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	entity "finbuild/entity/finance"
 	"finbuild/pkg/db"
-	"fmt"
 	"github.com/google/uuid"
 	"net/http"
 
@@ -18,7 +17,7 @@ func registerUser(w http.ResponseWriter, r *http.Request) {
 
 	decoder := json.NewDecoder(r.Body)
 	var u user.User
-	err := decoder.Decode(&u)
+	_ = decoder.Decode(&u)
 
 	u.UserID = genID
 	db.DB.Model(&user.User{}).Create(&u)
@@ -43,23 +42,7 @@ func registerUser(w http.ResponseWriter, r *http.Request) {
 	mp1 := map[string]interface{}{
 		"registry": rr,
 	}
-
-	var msg []map[string]interface{}
-	msg = append(msg, mp1)
-
-	jSend := Response{
-		Status:  "success",
-		Data:    msg,
-		Message: "registry with success",
-	}
-
-	b, err := json.Marshal(jSend)
-	if err != nil {
-		fmt.Println("error:", err)
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(b)
+	JParse(w, mp1)
 }
 
 // getUser return api response with user info
@@ -77,24 +60,7 @@ func getUser(w http.ResponseWriter, r *http.Request) {
 		"exchange": dbuser,
 	}
 
-	// create a map for json template return
-	var msg []map[string]interface{}
-	msg = append(msg, mp1)
-
-	// json template to return
-	jSend := Response{
-		Status:  "success",
-		Data:    msg,
-		Message: "test",
-	}
-
-	b, err := json.Marshal(jSend)
-	if err != nil {
-		fmt.Println("error:", err)
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(b)
+	JParse(w, mp1)
 }
 
 func GetRoot(w http.ResponseWriter, r *http.Request) {
@@ -135,18 +101,5 @@ func GetRoot(w http.ResponseWriter, r *http.Request) {
 	}
 	msg = append(msg, mp2)
 
-	jSend := Response{
-		Status:  "success",
-		Data:    msg,
-		Message: "test",
-	}
-
-	b, err := json.Marshal(jSend)
-	if err != nil {
-		fmt.Println("error:", err)
-
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(b)
+	JParse(w, mp1, mp2)
 }
