@@ -1,56 +1,47 @@
-package database
+package db
 
 import (
-	"database/sql"
 	"errors"
 	entity "finbuild/entity/finance"
 
 	log "finbuild/pkg/logging"
 	"fmt"
-	"github.com/google/uuid"
 )
 
-type FinanceDb struct {
-	db *sql.DB
-}
-
-func NewFinanceDb(db *sql.DB) *FinanceDb {
-	return &FinanceDb{db: db}
-}
-
-func UpdateBalance(userid uuid.UUID, action string, quantity float64, price float64) (float64, error) {
+func UpdateBalance(WalletID string, Action string, Quantity float64, Price float64, Tax float64, Date string) (float64, error) {
 
 	// get balance
 	var account entity.Wallet
-	DB.Table("accounts").First(&account).Scan(&account)
+	DB.Table("wallets").First(&account).Scan(&account)
 
-	if action == "BUY" {
+	if Action == "BUY" {
 		// update balance
-		v := account.Balance + (price * quantity)
-		DB.Table("accounts").Model(&entity.Wallet{}).Where("user_id = ?", userid).Update("balance", v)
+		v := account.Balance + ( Price * Quantity )
+		DB.Table("wallets").Model(&entity.Wallet{}).Where("wallet_id = ?", WalletID).Update("balance", v)
 		return v, nil
 	}
-	if action == "SELL" {
+	if Action == "SELL" {
 		// update balance
-		v := account.Balance - (price * quantity)
-		DB.Model(&entity.Wallet{}).Where("user_id = ?", userid).Update("balance", v)
+		v := account.Balance - (Price * Quantity)
+		DB.Table("wallets").Model(&entity.Wallet{}).Where("wallet_id = ?", WalletID).Update("balance", v)
 		return v, nil
 	}
 
 	return 0, errors.New("wrong action")
 }
 
-func RegisterAsset(userid uuid.UUID, action string, code string, quantity float64, price float64, date string) error {
-	msg := fmt.Sprintf("save in database - user: %s action: %s quantity: %f price: %f", userid, action, quantity, price)
+func RegisterExchange(WalletID string, AssetID string, Action string, Tax float64, Quantity float64, Price float64, Date string) error {
+	msg := fmt.Sprintf("save in db - wallet_id: %s asset_id: %s action: %s quantity: %f price: %f", WalletID, AssetID, Action, Quantity, Price)
 	log.Msg("INFO", msg)
-	as := &entity.Asset{
-		userid,
-		code,
-		price,
-		quantity,
-		action,
-		date,
+	as := &entity.Exchanges{
+		WalletID: WalletID,
+		AssetID:  AssetID,
+		Price:    Price,
+		Tax:      Tax,
+		Quantity: Quantity,
+		Action:   Action,
+		Date:     Date,
 	}
-	DB.Model(&entity.Asset{}).Create(&as)
+	DB.Table("exchanges").Model(&entity.Exchanges{}).Create(&as)
 	return nil
 }
