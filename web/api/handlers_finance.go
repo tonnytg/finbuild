@@ -21,18 +21,16 @@ func postExchange(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// convert body response to struct
-	var f entity.Exchanges
+	var f finance.Exchanges
 	err = json.Unmarshal(body, &f)
 	if err != nil {
 		msg := fmt.Sprintf("problem to unmarshal body: %v", err)
 		log.Msg("ERROR", msg)
 	}
 
-	// save db
-	db.DB.Table("exchanges").Create(&f)
-
 	// update Balance
 	db.UpdateBalance(f.WalletID, f.Action, f.Quantity, f.Price, f.Tax, f.Date)
+	// save exchange
 	db.RegisterExchange(f.WalletID, f.AssetID, f.Action, f.Tax, f.Quantity, f.Price, f.Date)
 
 	// create a slice of interface to receive json content
