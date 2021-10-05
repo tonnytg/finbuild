@@ -12,21 +12,14 @@ import (
 
 func registerUser(w http.ResponseWriter, r *http.Request) {
 
-	// genId create a UUID for new user
-	genID := uuid.New()
-
+	// new user
+	user := user.NewUser()
 	decoder := json.NewDecoder(r.Body)
-	var u user.User
-	_ = decoder.Decode(&u)
+	_ = decoder.Decode(&user)
+	db.DB.Model(&user).Create(&user)
 
-	u.UserID = genID
-	db.DB.Model(&user.User{}).Create(&u)
-
-	// create a blank wallet to new User
-	var wallet entity.Wallet
-	wallet.WalletID = uuid.New()
-	wallet.UserID = u.UserID
-	wallet.Balance = 0
+	// new wallet
+	wallet := entity.NewWallet(user.UserID)
 	db.DB.Table("wallets").Model(&entity.Wallet{}).Create(&wallet)
 
 	type RegistryReturn struct {
@@ -36,7 +29,7 @@ func registerUser(w http.ResponseWriter, r *http.Request) {
 
 	rr :=  RegistryReturn{
 		wallet.WalletID,
-		u.UserID,
+		user.UserID,
 	}
 
 	mp1 := map[string]interface{}{
