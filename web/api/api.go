@@ -20,7 +20,7 @@ func JParse(w http.ResponseWriter, j ...map[string]interface{}) {
 
 	// create a map for json template return
 	var msg []map[string]interface{}
-	for x, _ :=  range j {
+	for x, _ := range j {
 		msg = append(msg, j[x])
 	}
 
@@ -46,7 +46,7 @@ func JParse(w http.ResponseWriter, j ...map[string]interface{}) {
 func StartAPI() {
 	router := mux.NewRouter()
 
-	router.HandleFunc("/", GetRoot).Methods("GET")
+	router.HandleFunc("/", getRoot).Methods("GET")
 	router.HandleFunc("/user", getUser).Methods("GET")
 	router.HandleFunc("/user", registerUser).Methods("POST")
 

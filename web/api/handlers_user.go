@@ -14,6 +14,7 @@ func registerUser(w http.ResponseWriter, r *http.Request) {
 
 	// new user
 	user := user.NewUser()
+
 	decoder := json.NewDecoder(r.Body)
 	_ = decoder.Decode(&user)
 	db.DB.Model(&user).Create(&user)
@@ -24,10 +25,10 @@ func registerUser(w http.ResponseWriter, r *http.Request) {
 
 	type RegistryReturn struct {
 		WalletID uuid.UUID
-		UserID uuid.UUID
+		UserID   uuid.UUID
 	}
 
-	rr :=  RegistryReturn{
+	rr := RegistryReturn{
 		wallet.WalletID,
 		user.UserID,
 	}
@@ -56,12 +57,12 @@ func getUser(w http.ResponseWriter, r *http.Request) {
 	JParse(w, mp1)
 }
 
-func GetRoot(w http.ResponseWriter, r *http.Request) {
+func getRoot(w http.ResponseWriter, r *http.Request) {
 
 	// get balance
 	type Account struct {
 		WalletID string
-		Balance float64
+		Balance  float64
 	}
 
 	var account Account
@@ -74,11 +75,11 @@ func GetRoot(w http.ResponseWriter, r *http.Request) {
 
 	f := Account{
 		WalletID: account.WalletID,
-		Balance: account.Balance,
+		Balance:  account.Balance,
 	}
 
 	type Users struct {
-		ID string `json:"id"`
+		ID        string `json:"id"`
 		FirstName string `json:"first_name"`
 	}
 	u := Users{}

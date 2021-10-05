@@ -9,11 +9,12 @@ type Wallet struct {
 	Balance  float64   `json:"balance"`
 }
 
+// NewWallet create a new Wallet with 0 balance
 func NewWallet(u uuid.UUID) *Wallet {
 	wallet := Wallet{
 		WalletID: uuid.New(),
-		UserID: u,
-		Balance: 0,
+		UserID:   u,
+		Balance:  0,
 	}
 	return &wallet
 }
@@ -21,10 +22,10 @@ func NewWallet(u uuid.UUID) *Wallet {
 // WalletRent it's all transaction/action gain or lost money
 // contains information about history of wallet
 type WalletRent struct {
-	WalletID  uuid.UUID `json:"wallet_id"`
-	Price   float64   `json:"price"`
-	AssetID string    `json:"assetId"`
-	Type    string    `json:"type"`
-	Percent float64   `json:"percent"`
-	Date    string    `json:"date"`
+	WalletID uuid.UUID `json:"wallet_id"`
+	Price    float64   `json:"price"`
+	AssetID  string    `json:"assetId"`
+	Type     string    `json:"type"`
+	Percent  float64   `json:"percent"`
+	Date     string    `json:"date"`
 }

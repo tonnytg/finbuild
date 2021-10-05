@@ -16,7 +16,7 @@ func UpdateBalance(WalletID string, Action string, Quantity float64, Price float
 
 	if Action == "BUY" {
 		// update balance
-		v := account.Balance + ( Price * Quantity )
+		v := account.Balance + (Price * Quantity)
 		DB.Table("wallets").Model(&entity.Wallet{}).Where("wallet_id = ?", WalletID).Update("balance", v)
 		return v, nil
 	}
