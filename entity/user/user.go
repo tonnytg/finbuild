@@ -21,6 +21,11 @@ type User struct {
 	Sign       string    `json:"sign,omitempty"` // Example: Aquarius
 }
 
+type ShortUsers struct {
+	ID        string `json:"id"`
+	FirstName string `json:"first_name"`
+}
+
 func NewUser() *User {
 	user := User{
 		UserID: uuid.New(),
