@@ -64,7 +64,7 @@ func getRoot(w http.ResponseWriter, r *http.Request) {
 	var wallet *finance.ShortWallet
 	q := r.URL.Query()
 	userid := q["id"]
-	wallet = db.GetWallets(wallet, uuid.MustParse(userid[0]))
+	wallet = db.GetWalletsByUser(wallet, uuid.MustParse(userid[0]))
 
 	var msg []map[string]interface{}
 
