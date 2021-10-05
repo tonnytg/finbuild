@@ -1,4 +1,4 @@
-package entity
+package finance
 
 // Exchanges it's a term for all kind of item in Finance Market
 // contains registry about transaction purchase or sellers orders
