@@ -2,7 +2,7 @@ package api
 
 import (
 	"encoding/json"
-	entity "finbuild/entity/finance"
+	"finbuild/entity/finance"
 	"finbuild/pkg/db"
 	"github.com/google/uuid"
 	"net/http"
@@ -17,11 +17,12 @@ func registerUser(w http.ResponseWriter, r *http.Request) {
 
 	decoder := json.NewDecoder(r.Body)
 	_ = decoder.Decode(&user)
-	db.DB.Model(&user).Create(&user)
 
 	// new wallet
-	wallet := entity.NewWallet(user.UserID)
-	db.DB.Table("wallets").Model(&entity.Wallet{}).Create(&wallet)
+	wallet := finance.NewWallet(user.UserID)
+
+	// save in database
+	db.UserRegistry(user, wallet)
 
 	type RegistryReturn struct {
 		WalletID uuid.UUID
@@ -46,12 +47,12 @@ func getUser(w http.ResponseWriter, r *http.Request) {
 	q := r.URL.Query()
 	userid := q["id"]
 
-	dbuser := &user.User{}
-	db.DB.First(&dbuser, userid).Scan(&dbuser)
+	// get only one user of slice query id
+	user := db.GetUser(uuid.MustParse(userid[0]))
 
 	// create a slice of interface to receive json content
 	mp1 := map[string]interface{}{
-		"exchange": dbuser,
+		"exchange": user,
 	}
 
 	JParse(w, mp1)
@@ -59,34 +60,24 @@ func getUser(w http.ResponseWriter, r *http.Request) {
 
 func getRoot(w http.ResponseWriter, r *http.Request) {
 
-	// get balance
-	type Account struct {
-		WalletID string
-		Balance  float64
-	}
-
-	var account Account
 	// read db return and parse to struct
+	var wallet *finance.ShortWallet
 	q := r.URL.Query()
 	userid := q["id"]
-	db.DB.Table("wallets").First(&account, "user_id = ?", userid).Scan(&account).Find(&Account{})
+	wallet = db.GetWallets(wallet, uuid.MustParse(userid[0]))
 
 	var msg []map[string]interface{}
 
-	f := Account{
-		WalletID: account.WalletID,
-		Balance:  account.Balance,
+	f := finance.ShortWallet{
+		WalletID: wallet.WalletID,
+		Balance:  wallet.Balance,
 	}
 
-	type Users struct {
-		ID        string `json:"id"`
-		FirstName string `json:"first_name"`
-	}
-	u := Users{}
-	db.DB.Table("users").First(&u, "user_id = ?", userid).Scan(&u).Find(&Users{})
+	// get an essential information form user
+	su := db.GetShortUser(uuid.MustParse(userid[0]))
 
 	mp1 := map[string]interface{}{
-		"user": u,
+		"user": su,
 	}
 	msg = append(msg, mp1)
 
