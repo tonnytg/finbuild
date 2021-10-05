@@ -1,4 +1,4 @@
-package entity
+package finance
 
 import "github.com/google/uuid"
 
@@ -7,6 +7,11 @@ type Wallet struct {
 	WalletID uuid.UUID `json:"wallet_id"`
 	UserID   uuid.UUID `json:"user_id"`
 	Balance  float64   `json:"balance"`
+}
+
+type ShortWallet struct {
+	WalletID string
+	Balance  float64
 }
 
 // NewWallet create a new Wallet with 0 balance
