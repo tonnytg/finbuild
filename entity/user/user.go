@@ -20,3 +20,10 @@ type User struct {
 	Sex        string    `json:"sex,omitempty"`
 	Sign       string    `json:"sign,omitempty"` // Example: Aquarius
 }
+
+func NewUser() *User {
+	user := User{
+		UserID: uuid.New(),
+	}
+	return &user
+}
