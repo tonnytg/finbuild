@@ -1,4 +1,4 @@
-package finance
+package wallet
 
 import "github.com/google/uuid"
 
@@ -33,4 +33,12 @@ type WalletRent struct {
 	Type     string    `json:"type"`
 	Percent  float64   `json:"percent"`
 	Date     string    `json:"date"`
+}
+
+type WalletInterface interface {
+	IsValid(w *Wallet) bool
+}
+
+func (w *Wallet) IsValid() bool {
+	return true
 }

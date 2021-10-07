@@ -2,7 +2,7 @@ package api
 
 import (
 	"encoding/json"
-	"finbuild/entity/finance"
+	"finbuild/entity/exchange"
 	"finbuild/pkg/db"
 	log "finbuild/pkg/logging"
 	"fmt"
@@ -22,22 +22,22 @@ func postExchange(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// convert body response to struct
-	var f finance.Exchanges
-	err = json.Unmarshal(body, &f)
+	var e exchange.Exchanges
+	err = json.Unmarshal(body, &e)
 	if err != nil {
 		msg := fmt.Sprintf("problem to unmarshal body: %v", err)
 		log.Msg("ERROR", msg)
 	}
 
 	// update Balance
-	db.UpdateBalance(&f)
+	db.UpdateBalance(&e)
 
 	// save exchange
-	db.RegisterExchange(&f)
+	db.RegisterExchange(&e)
 
 	// create a slice of interface to receive json content
 	mp1 := map[string]interface{}{
-		"exchange": f,
+		"exchange": e,
 	}
 
 	JParse(w, mp1)
@@ -48,11 +48,11 @@ func getWallet(w http.ResponseWriter, r *http.Request) {
 	// read db return and parse to struct
 	q := r.URL.Query()
 	walletID := q["id"]
-	wallet := db.GetWalletsByID(uuid.MustParse(walletID[0]))
+	wl := db.GetWalletsByID(uuid.MustParse(walletID[0]))
 
 	// create a slice of interface to receive json content
 	mp1 := map[string]interface{}{
-		"wallets": wallet,
+		"wallets": wl,
 	}
 
 	JParse(w, mp1)
