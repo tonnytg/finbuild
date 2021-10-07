@@ -6,7 +6,6 @@ import (
 	"finbuild/pkg/db"
 	log "finbuild/pkg/logging"
 	"fmt"
-	"github.com/google/uuid"
 	"io/ioutil"
 	"net/http"
 )
@@ -38,21 +37,6 @@ func postExchange(w http.ResponseWriter, r *http.Request) {
 	// create a slice of interface to receive json content
 	mp1 := map[string]interface{}{
 		"exchange": e,
-	}
-
-	JParse(w, mp1)
-}
-
-func getWallet(w http.ResponseWriter, r *http.Request) {
-
-	// read db return and parse to struct
-	q := r.URL.Query()
-	walletID := q["id"]
-	wl := db.GetWalletsByID(uuid.MustParse(walletID[0]))
-
-	// create a slice of interface to receive json content
-	mp1 := map[string]interface{}{
-		"wallets": wl,
 	}
 
 	JParse(w, mp1)
