@@ -32,11 +32,15 @@ func UpdateBalance(f *finance.Exchanges) (float64, error) {
 }
 
 func RegisterExchange(f *finance.Exchanges) error {
-	msg := fmt.Sprintf("save in db - wallet_id: %s asset_id: %s action: %s quantity: %f price: %f",
-		f.WalletID, f.AssetID, f.Action, f.Quantity, f.Price)
-	log.Msg("INFO", msg)
 
-	DB.Table("exchanges").Model(&finance.Exchanges{}).Create(&f)
+	if f.Quantity > 0 {
+		msg := fmt.Sprintf("save in db - wallet_id: %s asset_id: %s action: %s quantity: %f price: %f",
+			f.WalletID, f.AssetID, f.Action, f.Quantity, f.Price)
+
+		log.Msg("INFO", msg)
+
+		DB.Table("exchanges").Model(&finance.Exchanges{}).Create(&f)
+	}
 	return nil
 }
 
