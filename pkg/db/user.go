@@ -1,17 +1,17 @@
 package db
 
 import (
-	"finbuild/entity/finance"
 	"finbuild/entity/user"
+	"finbuild/entity/wallet"
 	"github.com/google/uuid"
 )
 
-func UserRegistry(user *user.User, wallet *finance.Wallet) {
+// UserRegistry get user and wallet information to sabe in database
+func UserRegistry(u *user.User, w *wallet.Wallet) {
 
-	DB.Model(&user).Create(&user)
+	DB.Model(&u).Create(&u)
 
-	DB.Table("wallets").Model(&finance.Wallet{}).Create(&wallet)
-
+	DB.Table("wallets").Model(&wallet.Wallet{}).Create(&w)
 }
 
 // GetUser get all information from users where userID
