@@ -2,7 +2,8 @@ package api
 
 import (
 	"encoding/json"
-	"finbuild/entity/finance"
+	"finbuild/entity/wallet"
+
 	"finbuild/pkg/db"
 	"github.com/google/uuid"
 	"net/http"
@@ -12,17 +13,17 @@ import (
 
 func registerUser(w http.ResponseWriter, r *http.Request) {
 
-	// new user
-	user := user.NewUser()
+	// new us
+	us := user.NewUser()
 
 	decoder := json.NewDecoder(r.Body)
-	_ = decoder.Decode(&user)
+	_ = decoder.Decode(&us)
 
-	// new wallet
-	wallet := finance.NewWallet(user.UserID)
+	// new wallet call be wl
+	wl := wallet.NewWallet(us.UserID)
 
 	// save in database
-	db.UserRegistry(user, wallet)
+	db.UserRegistry(us, wl)
 
 	type RegistryReturn struct {
 		WalletID uuid.UUID
@@ -30,8 +31,8 @@ func registerUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	rr := RegistryReturn{
-		wallet.WalletID,
-		user.UserID,
+		wl.WalletID,
+		us.UserID,
 	}
 
 	mp1 := map[string]interface{}{
@@ -48,11 +49,11 @@ func getUser(w http.ResponseWriter, r *http.Request) {
 	userid := q["id"]
 
 	// get only one user of slice query id
-	user := db.GetUser(uuid.MustParse(userid[0]))
+	us := db.GetUser(uuid.MustParse(userid[0]))
 
 	// create a slice of interface to receive json content
 	mp1 := map[string]interface{}{
-		"exchange": user,
+		"exchange": us,
 	}
 
 	JParse(w, mp1)
@@ -61,16 +62,16 @@ func getUser(w http.ResponseWriter, r *http.Request) {
 func getRoot(w http.ResponseWriter, r *http.Request) {
 
 	// read db return and parse to struct
-	var wallet *finance.ShortWallet
+	var wl *wallet.ShortWallet
 	q := r.URL.Query()
 	userid := q["id"]
-	wallet = db.GetWalletsByUser(wallet, uuid.MustParse(userid[0]))
+	wl = db.GetWalletsByUser(wl, uuid.MustParse(userid[0]))
 
 	var msg []map[string]interface{}
 
-	f := finance.ShortWallet{
-		WalletID: wallet.WalletID,
-		Balance:  wallet.Balance,
+	f := wallet.ShortWallet{
+		WalletID: wl.WalletID,
+		Balance:  wl.Balance,
 	}
 
 	// get an essential information form user
