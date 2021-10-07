@@ -26,6 +26,9 @@ type ShortUsers struct {
 	FirstName string `json:"first_name"`
 }
 
+type Interface interface {
+}
+
 func NewUser() *User {
 	user := User{
 		UserID: uuid.New(),
