@@ -2,55 +2,57 @@ package db
 
 import (
 	"errors"
-	"finbuild/entity/finance"
+	"finbuild/entity/exchange"
+	"finbuild/entity/wallet"
+
 	"github.com/google/uuid"
 
 	log "finbuild/pkg/logging"
 	"fmt"
 )
 
-func UpdateBalance(f *finance.Exchanges) (float64, error) {
+func UpdateBalance(f *exchange.Exchanges) (float64, error) {
 
 	// get balance
-	var account finance.Wallet
+	var account wallet.Wallet
 	DB.Table("wallets").First(&account).Scan(&account)
 
 	if f.Action == "BUY" {
 		// update balance
 		v := account.Balance + (f.Price * f.Quantity)
-		DB.Table("wallets").Model(&finance.Wallet{}).Where("wallet_id = ?", f.WalletID).Update("balance", v)
+		DB.Table("wallets").Model(&wallet.Wallet{}).Where("wallet_id = ?", f.WalletID).Update("balance", v)
 		return v, nil
 	}
 	if f.Action == "SELL" {
 		// update balance
 		v := account.Balance - (f.Price * f.Quantity)
-		DB.Table("wallets").Model(&finance.Wallet{}).Where("wallet_id = ?", f.WalletID).Update("balance", v)
+		DB.Table("wallets").Model(&wallet.Wallet{}).Where("wallet_id = ?", f.WalletID).Update("balance", v)
 		return v, nil
 	}
 
 	return 0, errors.New("wrong action")
 }
 
-func RegisterExchange(f *finance.Exchanges) error {
+func RegisterExchange(e *exchange.Exchanges) error {
 
-	if f.Quantity > 0 {
-		msg := fmt.Sprintf("save in db - wallet_id: %s asset_id: %s action: %s quantity: %f price: %f",
-			f.WalletID, f.AssetID, f.Action, f.Quantity, f.Price)
+	if e.IsValid() {
+		msg := fmt.Sprintf("save in db - wallet_id: %s asset_id: %s action: %s quantity: %e price: %e",
+			e.WalletID, e.AssetID, e.Action, e.Quantity, e.Price)
 
 		log.Msg("INFO", msg)
 
-		DB.Table("exchanges").Model(&finance.Exchanges{}).Create(&f)
+		DB.Table("exchanges").Model(&exchange.Exchanges{}).Create(&e)
 	}
 	return nil
 }
 
-func GetWalletsByUser(s *finance.ShortWallet, u uuid.UUID) *finance.ShortWallet{
-	DB.Table("wallets").First(&s, "user_id = ?", u).Scan(&s).Find(&finance.Wallet{})
-	return s
+func GetWalletsByUser(ws *wallet.ShortWallet, u uuid.UUID) *wallet.ShortWallet {
+	DB.Table("wallets").First(&ws, "user_id = ?", u).Scan(&ws).Find(&wallet.Wallet{})
+	return ws
 }
 
-func GetWalletsByID(u uuid.UUID) *finance.ShortWallet{
-	var s *finance.ShortWallet
-	DB.Table("wallets").First(&s, "wallet_id = ?", u).Scan(&s).Find(&finance.Wallet{})
-	return s
+func GetWalletsByID(u uuid.UUID) *wallet.ShortWallet {
+	var ws *wallet.ShortWallet
+	DB.Table("wallets").First(&ws, "wallet_id = ?", u).Scan(&ws).Find(&wallet.Wallet{})
+	return ws
 }
