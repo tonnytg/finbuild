@@ -24,9 +24,9 @@ func NewWallet(u uuid.UUID) *Wallet {
 	return &wallet
 }
 
-// WalletRent it's all transaction/action gain or lost money
+// Rent it's all transaction/action gain or lost money
 // contains information about history of wallet
-type WalletRent struct {
+type Rent struct {
 	WalletID uuid.UUID `json:"wallet_id"`
 	Price    float64   `json:"price"`
 	AssetID  string    `json:"assetId"`
@@ -35,7 +35,7 @@ type WalletRent struct {
 	Date     string    `json:"date"`
 }
 
-type WalletInterface interface {
+type Interface interface {
 	IsValid(w *Wallet) bool
 }
 
