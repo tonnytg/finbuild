@@ -17,6 +17,10 @@ type Interface interface {
 	GetID() string
 }
 
+func NewExchange() Exchanges {
+	return Exchanges{}
+}
+
 func (e *Exchanges) IsValid() bool {
 
 	if e.Quantity > 0 {
