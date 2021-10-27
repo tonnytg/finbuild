@@ -14,19 +14,18 @@ import (
 func UpdateBalance(f *exchange.Exchanges) (float64, error) {
 
 	// get balance
-	var account wallet.Wallet
-	DB.Table("wallets").First(&account).Scan(&account)
-	fmt.Println("achei:", account)
+	var w wallet.Wallet
+	DB.Table("wallets").First(&w, "wallet_id = ?", f.WalletID).Scan(&w)
 
 	if f.Action == "BUY" {
 		// update balance
-		v := account.Balance + (f.Price * f.Quantity)
+		v := w.Balance + (f.Price * f.Quantity)
 		DB.Table("wallets").Model(&wallet.Wallet{}).Where("wallet_id = ?", f.WalletID).Update("balance", v)
 		return v, nil
 	}
 	if f.Action == "SELL" {
 		// update balance
-		v := account.Balance - (f.Price * f.Quantity)
+		v := w.Balance - (f.Price * f.Quantity)
 		DB.Table("wallets").Model(&wallet.Wallet{}).Where("wallet_id = ?", f.WalletID).Update("balance", v)
 		return v, nil
 	}
