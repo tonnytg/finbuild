@@ -16,6 +16,7 @@ func UpdateBalance(f *exchange.Exchanges) (float64, error) {
 	// get balance
 	var account wallet.Wallet
 	DB.Table("wallets").First(&account).Scan(&account)
+	fmt.Println("achei:", account)
 
 	if f.Action == "BUY" {
 		// update balance
