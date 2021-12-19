@@ -1,0 +1,58 @@
+{{ define "Index" }}
+    {{ template "_head" }}
+
+    {{ template "_menu" }}
+    <body>
+    <div class="container" class="main">
+        <section class="card">
+            <table class="table table-striped table-hover mb-0">
+                <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Action</th>
+                    <th>StockID</th>
+                    <th>Price</th>
+                    <th>Tax</th>
+                    <th>Quantity</th>
+                    <th>Spent</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{range .}}
+                <tr>
+                    <td>{{.Date}}</td>
+                    <td>{{.Action}}</td>
+                    <td>{{.AssetID}}</td>
+                    <td>{{.Price}}</td>
+                    <td>{{.Tax}}</td>
+                    <td>{{.Quantity}}</td>
+                    <td><script>
+                        // sum values of Quantity and Tax
+                        document.write(parseFloat( {{.Quantity}}  * {{.Price}} ) + parseFloat( {{.Tax}} ));
+                    </script>
+                    </td>
+                    <td>
+                        <a href="/edit?id=1" class="btn btn-info">Edit</a>
+                        <button onclick="onDelete('1')" class="btn btn-danger">Delete</button>
+                    </td>
+                </tr>
+                {{end}}
+                </tbody>
+            </table>
+        </section>
+    </div>
+
+    </body>
+
+    <script>
+        function onDelete(id) {
+            let resposta = confirm("Delete produtoID: " + id);
+            if (resposta) {
+                window.location = "/delete?id=" + id;
+            }
+        }
+
+    </script>
+    </html>
+{{ end }}

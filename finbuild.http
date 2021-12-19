@@ -1,0 +1,45 @@
+GET http://localhost:8888/?id=a717ac9a-1161-4b1b-a353-1759361e5903
+###
+
+GET http://localhost:8888/wallet?id=11b944b3-e194-409d-bb95-0d36e8d062c8
+
+# "WalletID": "11b944b3-e194-409d-bb95-0d36e8d062c8",
+# "UserID": "9c0c8744-ff56-4633-bb26-ea262c33be39"
+###
+
+# User INFO
+GET http://localhost:8888/user?id=9c0c8744-ff56-4633-bb26-ea262c33be39
+###
+
+# EXCHANGE BUY STOCKS
+POST http://localhost:8888/exchange
+
+{
+    "wallet_id": "11b944b3-e194-409d-bb95-0d36e8d062c8",
+    "asset_id": "ITUB4",
+    "price": 15,
+    "tax": 0,
+    "quantity": 100,
+    "action": "BUY",
+    "date": "2021/09/27 10:00:00"
+}
+###
+
+# Register User
+POST http://localhost:8888/user
+
+{
+  "first_name": "Tonnytg",
+  "last_name": "TG",
+  "social_id": "001.001.001.01",
+  "phone": "11946302400",
+  "email": "tonnytg@gmail.com",
+  "valid_email": true,
+  "city": "São Paulo",
+  "country": "São Paulo",
+  "address": "Av. Brasil 1450, Paraiso",
+  "zipcode": "01010001",
+  "age": 30,
+  "sex": "male",
+  "sign": "Aquarius"
+}

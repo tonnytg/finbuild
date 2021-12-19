@@ -3,6 +3,7 @@ package main
 import (
 	"finbuild/pkg/db"
 	"finbuild/web/api"
+	"finbuild/web/webserver"
 )
 
 func main() {
@@ -12,5 +13,8 @@ func main() {
 	db.InitDatabase()
 
 	// api.StartAPI run API Listen
-	api.StartAPI()
+	go api.StartAPI()
+
+	// webserver.StartWebServer run WebServer Listen
+	webserver.Start()
 }

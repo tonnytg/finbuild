@@ -56,3 +56,10 @@ func GetWalletsByID(u uuid.UUID) *wallet.ShortWallet {
 	DB.Table("wallets").First(&ws, "wallet_id = ?", u).Scan(&ws).Find(&wallet.Wallet{})
 	return ws
 }
+
+func GetExchanges(w uuid.UUID) []exchange.Exchanges{
+	var ex []exchange.Exchanges
+	DB.Table("exchanges").Select("*").Where("wallet_id = ?", w).Scan(&ex)
+	//DB.Table("exchanges").First(&ex, "wallet_id = ?", w).Scan(&ex).Find(&exchange.Exchanges{})
+	return ex
+}
